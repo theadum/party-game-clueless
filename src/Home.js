@@ -385,10 +385,10 @@ export default function Home() {
       <div style={styles.content}>
         <header style={styles.header}>
           <div style={styles.logoContainer}>
-            <div style={styles.logo}>🎲</div>
+            <div style={styles.logo}>🧩</div>
           </div>
           <h1 style={styles.title}>
-            <span style={styles.titleAccent}>Party Games</span>
+            <span style={styles.titleAccent}>Dicko's Games</span>
           </h1>
           <p style={styles.subtitle}>Choose your game</p>
         </header>
