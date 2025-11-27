@@ -38,7 +38,7 @@ export default function Home() {
         { title: 'Setup', text: 'Select the number of players. Each player enters their name and secretly views their role: Master, Infiltrator, or Follower.' },
         { title: 'The Master', text: 'The Master is revealed publicly. They show everyone the secret word while the Infiltrator secretly peeks at it too.' },
         { title: 'The Challenge', text: 'A 2-minute timer starts. Everyone asks yes/no questions to figure out the word. The Infiltrator must subtly help without being obvious!' },
-        { title: 'Win Condition', text: 'Vote for who you think is the Infiltrator. If caught, everyone else wins. If not caught, the Infiltrator wins!' },
+        { title: 'Win Condition', text: 'Vote for who you think is the Infiltrator. If caught, they get one chance to guess the word to still win. If they guess wrong or go undetected, the other team wins!' },
       ],
     },
   ];
@@ -153,7 +153,7 @@ export default function Home() {
       left: 0,
       right: 0,
       bottom: 0,
-      padding: '35px',
+      padding: '35px 35px 80px 35px',
       display: 'flex',
       flexDirection: 'column',
       justifyContent: 'space-between',
@@ -187,7 +187,6 @@ export default function Home() {
     gameFooter: {
       display: 'flex',
       gap: '20px',
-      marginTop: '25px',
       paddingTop: '20px',
       borderTop: '1px solid rgba(255,255,255,0.1)',
     },

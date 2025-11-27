@@ -35,15 +35,15 @@ const styles = {
   content: {
     maxWidth: '480px',
     margin: '0 auto',
-    padding: '40px 20px',
+    padding: '70px 20px 40px 20px',
     position: 'relative',
     zIndex: 10,
   },
   title: {
     fontFamily: "'Times New Roman', serif",
-    fontSize: '3rem',
+    fontSize: 'clamp(1.8rem, 8vw, 3rem)',
     fontWeight: 400,
-    letterSpacing: '0.3em',
+    letterSpacing: '0.2em',
     textAlign: 'center',
     color: '#ff3b3b',
     textShadow: '0 0 20px rgba(255,59,59,0.5), 0 0 40px rgba(255,59,59,0.3)',
@@ -95,21 +95,21 @@ const styles = {
   },
   buttonSecondary: {
     width: '100%',
-    padding: '15px 30px',
+    padding: '12px 15px',
     background: 'transparent',
     border: '1px solid #ff3b3b',
     borderRadius: '0',
     color: '#ff3b3b',
-    fontSize: '0.9rem',
+    fontSize: '0.75rem',
     fontFamily: "'Courier New', monospace",
-    letterSpacing: '0.3em',
+    letterSpacing: '0.2em',
     textTransform: 'uppercase',
     cursor: 'pointer',
     transition: 'all 0.3s',
   },
   roleCard: {
     textAlign: 'center',
-    padding: '40px',
+    padding: '20px 10px',
   },
   roleTitle: {
     fontSize: '0.8rem',
@@ -119,9 +119,9 @@ const styles = {
     textTransform: 'uppercase',
   },
   roleName: {
-    fontSize: '2.5rem',
+    fontSize: 'clamp(1.8rem, 6vw, 2.5rem)',
     fontFamily: "'Times New Roman', serif",
-    letterSpacing: '0.2em',
+    letterSpacing: '0.15em',
     marginBottom: '20px',
   },
   masterRole: {
@@ -155,15 +155,16 @@ const styles = {
     fontSize: '0.8rem',
   },
   secretWord: {
-    fontSize: '4rem',
+    fontSize: 'clamp(2rem, 10vw, 4rem)',
     fontFamily: "'Times New Roman', serif",
     color: '#ff3b3b',
     textAlign: 'center',
     textShadow: '0 0 30px rgba(255,59,59,0.8), 0 0 60px rgba(255,59,59,0.4)',
-    letterSpacing: '0.1em',
+    letterSpacing: '0.05em',
     animation: 'pulse 2s ease-in-out infinite',
     width: '100%',
-    wordBreak: 'break-word',
+    wordBreak: 'keep-all',
+    overflowWrap: 'normal',
   },
   timer: {
     fontSize: '6rem',
@@ -559,13 +560,13 @@ export default function Infiltrator() {
         <div style={styles.roleCard}>
           <div style={styles.roleTitle}>Agent {players[currentPlayerIndex]}</div>
           
-          <div style={{ minHeight: '140px', display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
+          <div style={{ minHeight: '160px', display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center' }}>
             {isRevealing ? (
               <>
-                <div style={{ ...styles.roleName, ...roleStyle }}>
+                <div style={{ ...styles.roleName, ...roleStyle, marginBottom: '15px' }}>
                   {role}
                 </div>
-                <p style={{ color: '#666', marginBottom: '30px', lineHeight: '1.6' }}>
+                <p style={{ color: '#666', marginBottom: '0', lineHeight: '1.6', textAlign: 'center' }}>
                   {role === 'Master' && 'You will reveal the secret word to all except the Infiltrator.'}
                   {role === 'Infiltrator' && 'Blend in. Discover the word. Avoid detection.'}
                   {role === 'Follower' && 'Find the Infiltrator among you.'}
@@ -573,10 +574,10 @@ export default function Infiltrator() {
               </>
             ) : (
               <>
-                <div style={{ ...styles.roleName, color: '#444' }}>
+                <div style={{ ...styles.roleName, color: '#444', marginBottom: '15px' }}>
                   ? ? ?
                 </div>
-                <p style={{ color: '#666', marginBottom: '30px', lineHeight: '1.6' }}>
+                <p style={{ color: '#666', marginBottom: '0', lineHeight: '1.6', textAlign: 'center' }}>
                   Hold the button below to reveal your role
                 </p>
               </>
@@ -587,6 +588,7 @@ export default function Infiltrator() {
             style={{
               ...styles.buttonSecondary,
               marginBottom: '15px',
+              marginTop: '20px',
               background: isRevealing ? 'rgba(255,59,59,0.2)' : 'transparent',
             }}
             onMouseDown={() => setIsRevealing(true)}

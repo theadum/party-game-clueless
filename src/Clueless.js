@@ -487,7 +487,7 @@ export default function Clueless() {
         >
           ← Home
         </button>
-        <div style={styles.card}>
+        <div style={{ ...styles.card, marginTop: '60px' }}>
           <h1 style={styles.title}>CLUELESS</h1>
           <p style={styles.subtitle}>The party game where one player is in the dark</p>
           
