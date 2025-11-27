@@ -46,11 +46,14 @@ export default function Home() {
   const styles = {
     container: {
       minHeight: '100vh',
+      height: '100%',
       background: '#0f0f0f',
-      position: 'relative',
-      overflow: 'hidden',
-      margin: 0,
-      padding: 0,
+      position: 'fixed',
+      top: 0,
+      left: 0,
+      right: 0,
+      bottom: 0,
+      overflow: 'auto',
     },
     backgroundOrbs: {
       position: 'absolute',

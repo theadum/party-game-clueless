@@ -16,13 +16,26 @@ const WORD_LIST = [
 const styles = {
   container: {
     minHeight: '100vh',
+    height: '100%',
     background: 'linear-gradient(135deg, #0a0a0f 0%, #1a1a2e 50%, #0f0f1a 100%)',
     fontFamily: "'Courier New', monospace",
     color: '#e0e0e0',
-    position: 'relative',
-    overflow: 'hidden',
-    margin: 0,
-    padding: 0,
+    position: 'fixed',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    overflow: 'auto',
+  },
+  scanlines: {
+    position: 'fixed',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    background: 'repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,0,0,0.1) 2px, rgba(0,0,0,0.1) 4px)',
+    pointerEvents: 'none',
+    zIndex: 100,
   },
   scanlines: {
     position: 'fixed',
@@ -902,6 +915,7 @@ export default function Infiltrator() {
 
   return (
     <div style={styles.container}>
+      <div style={styles.scanlines} />
       <style>
         {`
           @keyframes pulse {
