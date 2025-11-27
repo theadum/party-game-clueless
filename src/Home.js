@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 export default function Home() {
   const navigate = useNavigate();
   const [hoveredGame, setHoveredGame] = useState(null);
+  const [showRules, setShowRules] = useState(null);
 
   const games = [
     {
@@ -11,11 +12,17 @@ export default function Home() {
       title: 'CLUELESS',
       tagline: 'One player is in the dark',
       description: 'Everyone knows the secret word except one person. Can you blend in without knowing what everyone is talking about?',
-      players: '4-12',
+      players: '3-12',
       time: '5-10 min',
       gradient: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
       accentColor: '#667eea',
       icon: '🎭',
+      howToPlay: [
+        { title: 'Setup', text: 'Select the number of players and start the game.' },
+        { title: 'Secret Word', text: 'Each player is shown a word one at a time. ONE random player will see "CLUELESS" instead!' },
+        { title: 'The Challenge', text: 'Go around the group and each person says ONE word related to the secret word. The clueless player must try to blend in without knowing what the word is!' },
+        { title: 'Win Condition', text: 'After a few rounds, vote on who was clueless. If the group guesses correctly, they win! If the clueless player goes undetected, they win!' },
+      ],
     },
     {
       id: 'infiltrator',
@@ -27,6 +34,12 @@ export default function Home() {
       gradient: 'linear-gradient(135deg, #1a1a2e 0%, #16213e 100%)',
       accentColor: '#ff3b3b',
       icon: '🕵️',
+      howToPlay: [
+        { title: 'Setup', text: 'Select the number of players. Each player enters their name and secretly views their role: Master, Infiltrator, or Follower.' },
+        { title: 'The Master', text: 'The Master is revealed publicly. They show everyone the secret word while the Infiltrator secretly peeks at it too.' },
+        { title: 'The Challenge', text: 'A 2-minute timer starts. Everyone asks yes/no questions to figure out the word. The Infiltrator must subtly help without being obvious!' },
+        { title: 'Win Condition', text: 'Vote for who you think is the Infiltrator. If caught, everyone else wins. If not caught, the Infiltrator wins!' },
+      ],
     },
   ];
 
@@ -219,6 +232,98 @@ export default function Home() {
       borderLeft: '16px solid white',
       marginLeft: '4px',
     },
+    howToPlayButton: {
+      position: 'absolute',
+      top: '20px',
+      right: '20px',
+      padding: '8px 14px',
+      background: 'rgba(255,255,255,0.1)',
+      backdropFilter: 'blur(10px)',
+      border: '1px solid rgba(255,255,255,0.2)',
+      borderRadius: '20px',
+      color: 'rgba(255,255,255,0.8)',
+      fontSize: '0.75rem',
+      fontWeight: '500',
+      cursor: 'pointer',
+      transition: 'all 0.3s ease',
+      zIndex: 10,
+    },
+    howToPlayButtonHover: {
+      background: 'rgba(255,255,255,0.2)',
+      color: '#fff',
+    },
+    modalOverlay: {
+      position: 'fixed',
+      top: 0,
+      left: 0,
+      right: 0,
+      bottom: 0,
+      background: 'rgba(0,0,0,0.85)',
+      backdropFilter: 'blur(10px)',
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      padding: '20px',
+      zIndex: 1000,
+    },
+    modal: {
+      background: '#1a1a1a',
+      borderRadius: '24px',
+      padding: '40px',
+      maxWidth: '500px',
+      width: '100%',
+      maxHeight: '80vh',
+      overflowY: 'auto',
+      border: '1px solid rgba(255,255,255,0.1)',
+      boxShadow: '0 25px 50px rgba(0,0,0,0.5)',
+    },
+    modalHeader: {
+      display: 'flex',
+      alignItems: 'center',
+      gap: '15px',
+      marginBottom: '30px',
+    },
+    modalIcon: {
+      fontSize: '2.5rem',
+    },
+    modalTitle: {
+      fontFamily: "'Georgia', serif",
+      fontSize: '1.8rem',
+      color: '#fff',
+      margin: 0,
+    },
+    modalStep: {
+      background: 'rgba(255,255,255,0.05)',
+      borderRadius: '12px',
+      padding: '20px',
+      marginBottom: '15px',
+      borderLeft: '3px solid',
+    },
+    modalStepTitle: {
+      fontSize: '0.9rem',
+      fontWeight: '600',
+      color: '#fff',
+      marginBottom: '8px',
+    },
+    modalStepText: {
+      fontSize: '0.9rem',
+      color: 'rgba(255,255,255,0.7)',
+      lineHeight: '1.6',
+      margin: 0,
+    },
+    modalClose: {
+      width: '100%',
+      padding: '15px',
+      background: 'rgba(255,255,255,0.1)',
+      border: '1px solid rgba(255,255,255,0.2)',
+      borderRadius: '12px',
+      color: '#fff',
+      fontSize: '1rem',
+      fontWeight: '500',
+      cursor: 'pointer',
+      marginTop: '20px',
+      transition: 'all 0.3s ease',
+    },
     footer: {
       textAlign: 'center',
       marginTop: '80px',
@@ -297,6 +402,19 @@ export default function Home() {
               onMouseLeave={() => setHoveredGame(null)}
               onClick={() => navigate(`/${game.id}`)}
             >
+              <button
+                style={{
+                  ...styles.howToPlayButton,
+                  ...(hoveredGame === game.id ? styles.howToPlayButtonHover : {}),
+                }}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setShowRules(game);
+                }}
+              >
+                How to Play
+              </button>
+              
               <div style={styles.gameCardInner}>
                 <div>
                   <div style={styles.gameIcon}>{game.icon}</div>
@@ -328,6 +446,39 @@ export default function Home() {
             </div>
           ))}
         </div>
+
+        {showRules && (
+          <div style={styles.modalOverlay} onClick={() => setShowRules(null)}>
+            <div style={styles.modal} onClick={(e) => e.stopPropagation()}>
+              <div style={styles.modalHeader}>
+                <span style={styles.modalIcon}>{showRules.icon}</span>
+                <h2 style={styles.modalTitle}>{showRules.title}</h2>
+              </div>
+              
+              {showRules.howToPlay.map((step, index) => (
+                <div 
+                  key={index} 
+                  style={{
+                    ...styles.modalStep,
+                    borderLeftColor: showRules.accentColor,
+                  }}
+                >
+                  <div style={styles.modalStepTitle}>{index + 1}. {step.title}</div>
+                  <p style={styles.modalStepText}>{step.text}</p>
+                </div>
+              ))}
+              
+              <button 
+                style={styles.modalClose}
+                onClick={() => setShowRules(null)}
+                onMouseOver={(e) => e.target.style.background = 'rgba(255,255,255,0.2)'}
+                onMouseOut={(e) => e.target.style.background = 'rgba(255,255,255,0.1)'}
+              >
+                Got it!
+              </button>
+            </div>
+          </div>
+        )}
 
         <footer style={styles.footer}>
           <p style={styles.footerText}>

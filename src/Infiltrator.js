@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 const WORD_LIST = [
   'Lighthouse', 'Volcano', 'Penguin', 'Telescope', 'Cactus', 'Submarine',
@@ -232,13 +233,15 @@ const GAME_PHASES = {
   GAME_START: 'game_start',
   TIMER_RUNNING: 'timer_running',
   TIME_UP: 'time_up',
+  DISCUSSION: 'discussion',
   VOTING: 'voting',
   VOTE_RESULT: 'vote_result',
   WORD_GUESS: 'word_guess',
   FINAL_RESULT: 'final_result',
 };
 
-export default function InfiltratorGame() {
+export default function Infiltrator() {
+  const navigate = useNavigate();
   const [phase, setPhase] = useState(GAME_PHASES.SETUP);
   const [players, setPlayers] = useState([]);
   const [currentPlayerIndex, setCurrentPlayerIndex] = useState(0);
@@ -254,7 +257,6 @@ export default function InfiltratorGame() {
   const [gameResult, setGameResult] = useState(null);
   const [isRevealing, setIsRevealing] = useState(false);
   const timerRef = useRef(null);
-  const audioRef = useRef(null);
 
   useEffect(() => {
     return () => {
@@ -412,7 +414,11 @@ export default function InfiltratorGame() {
 
   const handleVoteResult = (infiltratorCaught) => {
     if (infiltratorCaught) {
-      setPhase(GAME_PHASES.WORD_GUESS);
+      setGameResult({
+        winner: 'Followers',
+        reason: 'The Infiltrator was caught!',
+      });
+      setPhase(GAME_PHASES.FINAL_RESULT);
     } else {
       setGameResult({
         winner: 'Infiltrator',
@@ -553,27 +559,29 @@ export default function InfiltratorGame() {
         <div style={styles.roleCard}>
           <div style={styles.roleTitle}>Agent {players[currentPlayerIndex]}</div>
           
-          {isRevealing ? (
-            <>
-              <div style={{ ...styles.roleName, ...roleStyle }}>
-                {role}
-              </div>
-              <p style={{ color: '#666', marginBottom: '30px', lineHeight: '1.6' }}>
-                {role === 'Master' && 'You will reveal the secret word to all except the Infiltrator.'}
-                {role === 'Infiltrator' && 'Blend in. Discover the word. Avoid detection.'}
-                {role === 'Follower' && 'Find the Infiltrator among you.'}
-              </p>
-            </>
-          ) : (
-            <>
-              <div style={{ ...styles.roleName, color: '#444' }}>
-                ? ? ?
-              </div>
-              <p style={{ color: '#666', marginBottom: '30px', lineHeight: '1.6' }}>
-                Hold the button below to reveal your role
-              </p>
-            </>
-          )}
+          <div style={{ minHeight: '140px', display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
+            {isRevealing ? (
+              <>
+                <div style={{ ...styles.roleName, ...roleStyle }}>
+                  {role}
+                </div>
+                <p style={{ color: '#666', marginBottom: '30px', lineHeight: '1.6' }}>
+                  {role === 'Master' && 'You will reveal the secret word to all except the Infiltrator.'}
+                  {role === 'Infiltrator' && 'Blend in. Discover the word. Avoid detection.'}
+                  {role === 'Follower' && 'Find the Infiltrator among you.'}
+                </p>
+              </>
+            ) : (
+              <>
+                <div style={{ ...styles.roleName, color: '#444' }}>
+                  ? ? ?
+                </div>
+                <p style={{ color: '#666', marginBottom: '30px', lineHeight: '1.6' }}>
+                  Hold the button below to reveal your role
+                </p>
+              </>
+            )}
+          </div>
           
           <button
             style={{
@@ -627,13 +635,15 @@ export default function InfiltratorGame() {
         <div style={styles.roleTitle}>The Secret Word</div>
         <div style={styles.secretWord}>{secretWord}</div>
         <p style={{ ...styles.instruction, marginTop: '30px' }}>
-          Master: Instruct everyone to close their eyes.
+          <span style={{ color: '#ffd700', fontWeight: 'bold', fontSize: '1.1rem' }}>
+            Master: Memorise this word, then CLOSE YOUR EYES too!
+          </span>
           <br /><br />
-          Place the device face-up on the table and announce:
+          Instruct everyone to close their eyes, then place the device face-up on the table and announce:
           <br />
           <span style={{ color: '#ffd700' }}>"Infiltrator, open your eyes and view the word."</span>
           <br /><br />
-          After 15-20 seconds, retrieve the device and tell everyone to open their eyes.
+          After 15-20 seconds, open your eyes, retrieve the device, and tell everyone to open their eyes.
         </p>
         <button 
           style={styles.button} 
@@ -673,9 +683,18 @@ export default function InfiltratorGame() {
         }}>
           {formatTime(timeLeft)}
         </div>
-        <p style={{ color: '#666', marginTop: '20px' }}>
+        <p style={{ color: '#666', marginTop: '20px', marginBottom: '30px' }}>
           Ask yes/no questions about the secret word
         </p>
+        <button 
+          style={styles.button} 
+          onClick={() => {
+            if (timerRef.current) clearInterval(timerRef.current);
+            setPhase(GAME_PHASES.DISCUSSION);
+          }}
+        >
+          Guessed!
+        </button>
       </div>
     </div>
   );
@@ -685,7 +704,31 @@ export default function InfiltratorGame() {
       <div style={styles.roleCard}>
         <div style={{ ...styles.roleName, color: '#ff3b3b' }}>TIME'S UP</div>
         <p style={styles.instruction}>
-          Discuss among yourselves, then vote for who you believe is the Infiltrator.
+          The interrogation phase has ended.
+        </p>
+        <button 
+          style={styles.button} 
+          onClick={() => setPhase(GAME_PHASES.DISCUSSION)}
+        >
+          Continue
+        </button>
+      </div>
+    </div>
+  );
+
+  const renderDiscussion = () => (
+    <div style={styles.card}>
+      <div style={styles.roleCard}>
+        <div style={styles.roleTitle}>Discussion Time</div>
+        <div style={{ ...styles.roleName, color: '#ffd700', fontSize: '2rem' }}>
+          Who is the Infiltrator?
+        </div>
+        <p style={styles.instruction}>
+          Discuss among yourselves what happened during the round.
+          <br /><br />
+          Share your suspicions and defend yourself if accused.
+          <br /><br />
+          When everyone is ready, proceed to the vote.
         </p>
         <button 
           style={styles.button} 
@@ -694,7 +737,7 @@ export default function InfiltratorGame() {
             setPhase(GAME_PHASES.VOTING);
           }}
         >
-          Begin Voting
+          Ready to Vote
         </button>
       </div>
     </div>
@@ -712,6 +755,7 @@ export default function InfiltratorGame() {
         index !== currentVoterIndex && (
           <button
             key={index}
+            className="vote-button"
             style={{
               ...styles.voteButton,
               ...(selectedVote === index ? styles.voteButtonSelected : {})
@@ -734,8 +778,6 @@ export default function InfiltratorGame() {
   );
 
   const renderVoteResult = () => {
-    const isInfiltrator = roles[votedPlayer] === 'Infiltrator';
-    
     return (
       <div style={styles.card}>
         <div style={styles.roleCard}>
@@ -804,9 +846,9 @@ export default function InfiltratorGame() {
         <div style={styles.roleTitle}>Mission Complete</div>
         <div style={{
           ...styles.winText,
-          ...(gameResult.winner === 'Infiltrator' ? styles.loseTeam : styles.winTeam)
+          ...(gameResult.winner === 'Infiltrator' ? styles.infiltratorRole : styles.followerRole)
         }}>
-          {gameResult.winner} Wins!
+          {gameResult.winner} Win{gameResult.winner === 'Followers' ? '' : 's'}!
         </div>
         <p style={{ color: '#999' }}>{gameResult.reason}</p>
       </div>
@@ -844,6 +886,7 @@ export default function InfiltratorGame() {
       case GAME_PHASES.GAME_START: return renderGameStart();
       case GAME_PHASES.TIMER_RUNNING: return renderTimer();
       case GAME_PHASES.TIME_UP: return renderTimeUp();
+      case GAME_PHASES.DISCUSSION: return renderDiscussion();
       case GAME_PHASES.VOTING: return renderVoting();
       case GAME_PHASES.VOTE_RESULT: return renderVoteResult();
       case GAME_PHASES.WORD_GUESS: return renderWordGuess();
@@ -881,8 +924,41 @@ export default function InfiltratorGame() {
             cursor: not-allowed;
             transform: none !important;
           }
+          .back-button:hover {
+            background: rgba(255,255,255,0.1) !important;
+            box-shadow: none !important;
+          }
+          .vote-button:hover {
+            background: rgba(255,59,59,0.1) !important;
+            border-color: #ff3b3b !important;
+            color: #ff3b3b !important;
+            box-shadow: none !important;
+          }
         `}
       </style>
+      <button
+        className="back-button"
+        onClick={() => navigate('/')}
+        style={{
+          position: 'absolute',
+          top: '20px',
+          left: '20px',
+          background: 'transparent',
+          border: '1px solid rgba(255,255,255,0.2)',
+          borderRadius: '8px',
+          color: 'rgba(255,255,255,0.6)',
+          padding: '10px 16px',
+          fontSize: '0.85rem',
+          cursor: 'pointer',
+          zIndex: 101,
+          display: 'flex',
+          alignItems: 'center',
+          gap: '6px',
+          transition: 'all 0.3s ease',
+        }}
+      >
+        ← Home
+      </button>
       <div style={styles.content}>
         <h1 style={styles.title}>Infiltrator</h1>
         <p style={styles.subtitle}>A Game of Deception</p>

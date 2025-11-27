@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 const WORD_CATEGORIES = {
   celebrities: [
@@ -173,8 +174,9 @@ const WORD_CATEGORIES = {
 const ALL_WORDS = Object.values(WORD_CATEGORIES).flat();
 
 export default function Clueless() {
+  const navigate = useNavigate();
   const [gameState, setGameState] = useState('setup');
-  const [playerCount, setPlayerCount] = useState(4);
+  const [playerCount, setPlayerCount] = useState(3);
   const [currentPlayerIndex, setCurrentPlayerIndex] = useState(0);
   const [showInstructions, setShowInstructions] = useState(false);
   const [currentWord, setCurrentWord] = useState('');
@@ -462,6 +464,29 @@ export default function Clueless() {
   if (gameState === 'setup') {
     return (
       <div style={styles.container}>
+        <button
+          onClick={() => navigate('/')}
+          style={{
+            position: 'absolute',
+            top: '20px',
+            left: '20px',
+            background: 'rgba(255,255,255,0.2)',
+            border: 'none',
+            borderRadius: '8px',
+            color: '#667eea',
+            padding: '10px 16px',
+            fontSize: '0.85rem',
+            fontWeight: '600',
+            cursor: 'pointer',
+            zIndex: 101,
+            display: 'flex',
+            alignItems: 'center',
+            gap: '6px',
+            transition: 'all 0.3s ease',
+          }}
+        >
+          ← Home
+        </button>
         <div style={styles.card}>
           <h1 style={styles.title}>CLUELESS</h1>
           <p style={styles.subtitle}>The party game where one player is in the dark</p>
@@ -471,7 +496,7 @@ export default function Clueless() {
             <div style={styles.playerControls}>
               <button
                 style={styles.buttonSmall}
-                onClick={() => setPlayerCount(Math.max(4, playerCount - 1))}
+                onClick={() => setPlayerCount(Math.max(3, playerCount - 1))}
               >
                 -
               </button>
@@ -483,7 +508,7 @@ export default function Clueless() {
                 +
               </button>
             </div>
-            <p style={styles.smallText}>4-12 players recommended</p>
+            <p style={styles.smallText}>3-12 players</p>
             <p style={styles.wordCount}>{ALL_WORDS.length} words across {Object.keys(WORD_CATEGORIES).length} categories!</p>
           </div>
 
