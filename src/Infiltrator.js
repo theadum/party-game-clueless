@@ -21,6 +21,8 @@ const styles = {
     color: '#e0e0e0',
     position: 'relative',
     overflow: 'hidden',
+    margin: 0,
+    padding: 0,
   },
   scanlines: {
     position: 'fixed',
@@ -35,7 +37,7 @@ const styles = {
   content: {
     maxWidth: '480px',
     margin: '0 auto',
-    padding: '70px 20px 40px 20px',
+    padding: '50px 20px 20px 20px',
     position: 'relative',
     zIndex: 10,
   },
@@ -585,6 +587,7 @@ export default function Infiltrator() {
           </div>
           
           <button
+            className="hold-button"
             style={{
               ...styles.buttonSecondary,
               marginBottom: '15px',
@@ -899,7 +902,6 @@ export default function Infiltrator() {
 
   return (
     <div style={styles.container}>
-      <div style={styles.scanlines} />
       <style>
         {`
           @keyframes pulse {
@@ -935,6 +937,11 @@ export default function Infiltrator() {
             border-color: #ff3b3b !important;
             color: #ff3b3b !important;
             box-shadow: none !important;
+          }
+          .hold-button {
+            -webkit-user-select: none;
+            -webkit-touch-callout: none;
+            user-select: none;
           }
         `}
       </style>

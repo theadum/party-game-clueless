@@ -49,6 +49,8 @@ export default function Home() {
       background: '#0f0f0f',
       position: 'relative',
       overflow: 'hidden',
+      margin: 0,
+      padding: 0,
     },
     backgroundOrbs: {
       position: 'absolute',
@@ -94,11 +96,11 @@ export default function Home() {
       zIndex: 1,
       maxWidth: '1000px',
       margin: '0 auto',
-      padding: '60px 30px',
+      padding: '20px 20px',
     },
     header: {
       textAlign: 'center',
-      marginBottom: '70px',
+      marginBottom: '30px',
     },
     logoContainer: {
       marginBottom: '20px',
@@ -206,10 +208,10 @@ export default function Home() {
     },
     playButton: {
       position: 'absolute',
-      bottom: '35px',
-      right: '35px',
-      width: '60px',
-      height: '60px',
+      bottom: '25px',
+      right: '25px',
+      width: '50px',
+      height: '50px',
       borderRadius: '50%',
       background: 'rgba(255,255,255,0.15)',
       backdropFilter: 'blur(10px)',
@@ -325,8 +327,9 @@ export default function Home() {
     },
     footer: {
       textAlign: 'center',
-      marginTop: '80px',
-      paddingTop: '40px',
+      marginTop: '30px',
+      paddingTop: '20px',
+      paddingBottom: '20px',
       borderTop: '1px solid rgba(255,255,255,0.08)',
     },
     footerText: {
