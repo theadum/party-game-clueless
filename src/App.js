@@ -2,8 +2,9 @@ import React, { useState } from 'react';
 
 export default function PartyGame() {
   const [gameState, setGameState] = useState('setup');
-  const [playerCount, setPlayerCount] = useState(2);
+  const [playerCount, setPlayerCount] = useState(3);
   const [currentPlayerIndex, setCurrentPlayerIndex] = useState(0);
+  const [showInstructions, setShowInstructions] = useState(false);
   const [wordList] = useState([
     'Pizza', 'Dinosaur', 'Ocean', 'Guitar', 'Moonlight',
     'Volcano', 'Penguin', 'Skateboard', 'Telescope', 'Butterfly',
@@ -40,9 +41,10 @@ export default function PartyGame() {
 
   const resetGame = () => {
     setGameState('setup');
-    setPlayerCount(2);
+    setPlayerCount(3);
     setCurrentPlayerIndex(0);
     setRoundActive(false);
+    setShowInstructions(false);
   };
 
   const styles = {
@@ -193,6 +195,70 @@ export default function PartyGame() {
       fontSize: '3rem',
       fontWeight: '800',
       color: '#e53e3e'
+    },
+    instructionsButton: {
+      background: 'transparent',
+      color: '#667eea',
+      border: '2px solid #667eea',
+      borderRadius: '12px',
+      padding: '12px 24px',
+      fontSize: '0.9rem',
+      fontWeight: '600',
+      cursor: 'pointer',
+      marginTop: '20px',
+      width: '100%'
+    },
+    instructionsOverlay: {
+      position: 'fixed',
+      top: 0,
+      left: 0,
+      right: 0,
+      bottom: 0,
+      background: 'rgba(0,0,0,0.7)',
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      padding: '20px',
+      zIndex: 1000
+    },
+    instructionsModal: {
+      background: 'white',
+      borderRadius: '20px',
+      padding: '40px',
+      maxWidth: '500px',
+      width: '100%',
+      maxHeight: '80vh',
+      overflowY: 'auto'
+    },
+    instructionsTitle: {
+      fontSize: '2rem',
+      color: '#667eea',
+      marginBottom: '20px',
+      fontWeight: '700'
+    },
+    instructionsText: {
+      color: '#333',
+      lineHeight: '1.6',
+      marginBottom: '15px',
+      fontSize: '0.95rem'
+    },
+    instructionsStep: {
+      background: '#f3f4ff',
+      padding: '15px',
+      borderRadius: '10px',
+      marginBottom: '10px'
+    },
+    closeButton: {
+      background: '#667eea',
+      color: 'white',
+      border: 'none',
+      borderRadius: '12px',
+      padding: '15px',
+      fontSize: '1rem',
+      fontWeight: '600',
+      cursor: 'pointer',
+      width: '100%',
+      marginTop: '20px'
     }
   };
 
@@ -208,7 +274,7 @@ export default function PartyGame() {
             <div style={styles.playerControls}>
               <button
                 style={styles.buttonSmall}
-                onClick={() => setPlayerCount(Math.max(2, playerCount - 1))}
+                onClick={() => setPlayerCount(Math.max(3, playerCount - 1))}
               >
                 -
               </button>
@@ -220,13 +286,57 @@ export default function PartyGame() {
                 +
               </button>
             </div>
-            <p style={styles.smallText}>2-12 players recommended</p>
+            <p style={styles.smallText}>3-12 players recommended</p>
           </div>
 
           <button style={styles.buttonLarge} onClick={startGame}>
             Start Game
           </button>
+          
+          <button style={styles.instructionsButton} onClick={() => setShowInstructions(true)}>
+            How to Play
+          </button>
         </div>
+        
+        {showInstructions && (
+          <div style={styles.instructionsOverlay} onClick={() => setShowInstructions(false)}>
+            <div style={styles.instructionsModal} onClick={(e) => e.stopPropagation()}>
+              <h2 style={styles.instructionsTitle}>How to Play Clueless</h2>
+              
+              <div style={styles.instructionsStep}>
+                <p style={styles.instructionsText}>
+                  <strong>1. Setup:</strong> Select the number of players and start the game.
+                </p>
+              </div>
+              
+              <div style={styles.instructionsStep}>
+                <p style={styles.instructionsText}>
+                  <strong>2. Secret Word:</strong> Each player will be shown a word one at a time. Remember: ONE random player will see "CLUELESS" instead!
+                </p>
+              </div>
+              
+              <div style={styles.instructionsStep}>
+                <p style={styles.instructionsText}>
+                  <strong>3. The Challenge:</strong> Go around the group and each person says ONE word related to the secret word. The clueless player must try to blend in without knowing what the word is!
+                </p>
+              </div>
+              
+              <div style={styles.instructionsStep}>
+                <p style={styles.instructionsText}>
+                  <strong>4. Win Condition:</strong> After a few rounds, discuss and vote on who you think was clueless. If the group guesses correctly, they win! If the clueless player goes undetected, they win!
+                </p>
+              </div>
+              
+              <p style={{...styles.instructionsText, marginTop: '20px', fontStyle: 'italic'}}>
+                Tip: The clueless player should listen carefully to others' words and try to give something vague that could fit many topics!
+              </p>
+              
+              <button style={styles.closeButton} onClick={() => setShowInstructions(false)}>
+                Got it!
+              </button>
+            </div>
+          </div>
+        )}
       </div>
     );
   }
