@@ -487,7 +487,7 @@ export default function Home() {
 
         <footer style={styles.footer}>
           <p style={styles.footerText}>
-            Made with <span style={styles.footerHeart}>♥</span> for parties
+            Made by Dicko (and AI).
           </p>
         </footer>
       </div>
